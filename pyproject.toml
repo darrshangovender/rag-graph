@@ -1,0 +1,21 @@
+[project]
+name = "rag-graph"
+version = "0.1.0"
+description = "Knowledge-graph-augmented RAG. LLM entity+relation extraction, SQLite graph store, hybrid vector + graph retrieval."
+readme = "README.md"
+requires-python = ">=3.11"
+license = { text = "MIT" }
+authors = [{ name = "Darrshan Govender", email = "darrshangovender@gmail.com" }]
+keywords = ["llm", "rag", "knowledge-graph", "retrieval", "embeddings"]
+dependencies = [
+    "pydantic>=2.7",
+]
+
+[project.optional-dependencies]
+openai = ["openai>=1.50.0"]
+anthropic = ["anthropic>=0.40.0"]
+dev = ["pytest>=8.0", "ruff>=0.4"]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
