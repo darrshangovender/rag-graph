@@ -6,7 +6,6 @@ Requires either ANTHROPIC_API_KEY or OPENAI_API_KEY.
 from rag_graph import GraphRAG
 from rag_graph.embeddings import OpenAIEmbedder
 
-
 DOCS = {
     "doc-1": """\
 # DeepMind acquisition
