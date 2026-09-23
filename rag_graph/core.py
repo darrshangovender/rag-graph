@@ -62,13 +62,13 @@ class GraphRAG:
             # Extract + link entities
             try:
                 ex = self.extractor.extract(ch.text)
-            except Exception:
+            except Exception:  # noqa: BLE001  fail open: a bad extraction must not lose the chunk
                 # Fail open: a bad extraction shouldn't lose the chunk's vector value
                 ex = None
             if ex is not None:
                 name_to_id: dict[str, int] = {}
                 for ent in ex.entities:
-                    eid, is_new = self.resolver.resolve(ent.name, entity_type=ent.type)
+                    eid, _is_new = self.resolver.resolve(ent.name, entity_type=ent.type)
                     self.store.upsert_entity(
                         entity_id=eid, canonical=self.resolver.canonical(eid),
                         type_=ent.type, aliases=list(self.resolver.aliases(eid)),
