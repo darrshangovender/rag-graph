@@ -106,7 +106,7 @@ class HybridRetriever:
         # Fallback: full LLM extraction on the query
         try:
             ex = self.extractor.extract(query)
-        except Exception:
+        except Exception:  # noqa: BLE001  optional LLM fallback; no entities is a valid answer
             return []
         for e in ex.entities:
             eid = self._surface_index.get(normalize_surface(e.name))
