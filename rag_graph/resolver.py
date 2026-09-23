@@ -19,7 +19,6 @@ from __future__ import annotations
 import re
 import string
 
-
 _PUNCT_RE = re.compile(f"[{re.escape(string.punctuation)}]")
 
 
