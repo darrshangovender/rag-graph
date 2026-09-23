@@ -17,8 +17,6 @@ import math
 import sqlite3
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any
-
 
 SCHEMA = """
 CREATE TABLE IF NOT EXISTS chunks (
