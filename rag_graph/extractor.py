@@ -18,7 +18,6 @@ from typing import Literal
 
 from pydantic import BaseModel, Field, ValidationError
 
-
 EntityType = Literal["Person", "Organisation", "Place", "Concept", "Date", "Event", "Product", "Other"]
 
 
