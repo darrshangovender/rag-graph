@@ -1,7 +1,6 @@
 """Tests for hybrid retriever — uses the toy HashEmbedder so we never hit a real API."""
 
 from rag_graph.embeddings import HashEmbedder
-from rag_graph.resolver import EntityResolver
 from rag_graph.store import GraphStore
 
 
