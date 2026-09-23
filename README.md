@@ -1,157 +1,136 @@
-<div align="center">
+# rag-graph — knowledge-graph-augmented RAG for questions that connect facts
 
-# rag-graph — knowledge-graph-augmented RAG, with real working code
-
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)]
-[![tests](https://github.com/darrshangovender/rag-graph/actions/workflows/tests.yml/badge.svg)](https://github.com/darrshangovender/rag-graph/actions/workflows/tests.yml)(LICENSE)
+[![tests](https://github.com/darrshangovender/rag-graph/actions/workflows/tests.yml/badge.svg)](https://github.com/darrshangovender/rag-graph/actions/workflows/tests.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Python](https://img.shields.io/badge/Python-3.11+-3776AB?logo=python&logoColor=white)](https://python.org)
 [![SQLite](https://img.shields.io/badge/SQLite-3-003B57?logo=sqlite&logoColor=white)](https://sqlite.org)
-[![Anthropic](https://img.shields.io/badge/Anthropic-Claude-CC785C)](https://anthropic.com)
-[![Pydantic](https://img.shields.io/badge/Pydantic-2.7+-E92063?logo=pydantic&logoColor=white)](https://pydantic.dev)
-[![Status](https://img.shields.io/badge/Status-Working%20code-blue)](#)
 
-</div>
+> Documents go through LLM-based entity and relation extraction; the resulting triples live in a SQLite knowledge graph alongside chunk embeddings. At query time, retrieval blends vector kNN over chunks with multi-hop graph traversal from the entities named in the question.
 
----
+**Why this exists.** Vector-only RAG is strong on "what does this document say about X" and weak on questions that need to *connect* facts across documents — "who funded the company that acquired Y?". A graph handles connection-shaped questions; vectors handle narrative and soft knowledge that never reduces to a triple. This is a small, readable implementation of doing both in one store, with the seams left visible.
 
-> A small but realistic implementation of **graph-augmented RAG**. Documents go through LLM-based entity + relation extraction; the resulting triples live in a SQLite knowledge graph alongside the chunk embeddings. At query time we run **hybrid retrieval**: vector kNN over chunks PLUS multi-hop graph traversal from the entities mentioned in the query. The retrieved evidence is sent to the LLM with both source chunks and the traversed sub-graph as context.
-
-**Why this exists.** Vector-only RAG is great for "what does this document say about X" but loses on questions that need to **connect** facts across documents — "who funded the company that acquired Y?". Knowledge-graph retrieval handles connection-style questions. Doing both well, in production, in one library, is what this repo demonstrates.
+Pairs with [rag-eval-harness](https://github.com/darrshangovender/rag-eval-harness) — `GraphRAG` satisfies its two-function pipeline contract.
 
 ---
 
-## Pipeline
+## Quick start
 
+```bash
+pip install -e ".[openai,dev]"     # or ".[anthropic,dev]"
+python examples/demo.py
 ```
-Documents
-   │
-   ▼
-┌──────────────────┐    ┌──────────────────────┐
-│ Chunker          │    │ Entity + Relation    │  ← LLM call per chunk,
-│ (heading-aware)  │    │ Extractor            │    JSON-mode + Pydantic
-└────────┬─────────┘    └──────────┬───────────┘
-         ▼                         ▼
-┌──────────────────┐    ┌──────────────────────┐
-│ Embedder         │    │ EntityResolver       │  ← canonicalises aliases
-└────────┬─────────┘    └──────────┬───────────┘
-         ▼                         ▼
-┌─────────────────────────────────────────────┐
-│ SQLite store: chunks + entities + edges      │
-│   chunks(id, doc_id, text, embedding)        │
-│   entities(id, canonical_name, type, aliases)│
-│   edges(src_id, predicate, dst_id, source)   │
-│   chunk_entities(chunk_id, entity_id)        │
-└────────────────────┬────────────────────────┘
-                     │
-   query ────────────┴──────────────────────────┐
-                     │                          │
-                     ▼                          ▼
-       ┌──────────────────────┐    ┌──────────────────────┐
-       │ Vector kNN over      │    │ Entity extraction    │
-       │ chunks (top-k)       │    │ on the query         │
-       └──────────┬───────────┘    └──────────┬───────────┘
-                  │                           ▼
-                  │             ┌──────────────────────┐
-                  │             │ Graph BFS up to N    │
-                  │             │ hops from query ents │
-                  │             └──────────┬───────────┘
-                  ▼                        ▼
-       ┌──────────────────────────────────────────┐
-       │ Merge: dedupe chunks, score-blend        │
-       │ vec_score + graph_proximity              │
-       └──────────────────┬───────────────────────┘
-                          ▼
-                LLM with chunks + sub-graph
-                          ▼
-                  Cited answer
-```
-
-## Usage
 
 ```python
 from rag_graph import GraphRAG
-from rag_graph.embeddings import OpenAIEmbedder
+from rag_graph.embeddings import HashEmbedder   # OpenAIEmbedder() for real use
 
 rag = GraphRAG(
     db_path="kg.db",
-    embedder=OpenAIEmbedder(),
-    extractor_model="claude-sonnet-4-5",
+    embedder=HashEmbedder(dimension=16),
+    extractor_model="claude-sonnet-4-5",        # provider inferred from the prefix
+    answer_model="claude-sonnet-4-5",
 )
 
-# Ingest
-for doc in load_docs():
-    rag.ingest(doc_id=doc.id, text=doc.text)
+rag.ingest(doc_id="doc-1", text="# DeepMind\nGoogle acquired DeepMind in 2014.")
 
-# Ask a connection-style question
-result = rag.ask(
-    "Which companies founded by ex-Google engineers acquired AI labs in 2024?",
-    k=8,         # top-k chunks
-    hops=2,      # graph traversal depth
-)
-
+result = rag.ask("Who founded the company Google acquired?", k=6, hops=2)
 print(result.answer)
-print(result.sources)         # chunk citations
-print(result.entities_used)   # entities the graph traversal touched
+print(result.entities_used)     # canonical names the traversal touched
+for s in result.sources:
+    print(s["chunk_id"], s["vec_score"], s["graph_proximity"], s["final_score"])
 ```
 
-## Why hybrid retrieval, not pure graph
+All `GraphRAG` constructor arguments are keyword-only. Passing no embedder instantiates `OpenAIEmbedder`, which needs the `openai` extra installed.
 
-Knowledge graphs miss everything that wasn't extracted as a triple. Vector retrieval catches fuzzy, narrative, "soft" knowledge that doesn't reduce to (entity, predicate, entity). Doing both means the system handles:
+## How it works
 
-- **Connection questions** ("who funded the company that acquired Y") via graph
-- **Soft / narrative questions** ("how did the founder describe the pivot") via vector
-- **Lookup questions** ("when was Y founded") via either, with the other as confirmation
+```mermaid
+flowchart LR
+    D[document] --> C[heading chunker]
+    C --> EM[embed chunk]
+    C --> EX[LLM triple extraction]
+    EX --> RS[entity resolver]
+    EM --> DB[("SQLite: chunks · entities · edges")]
+    RS --> DB
+    Q[query] --> SD[seed entities]
+    SD --> BF[BFS to N hops]
+    DB --> VK[cosine over chunks]
+    BF --> BL[blend vec + α·proximity]
+    VK --> BL
+    BL --> AN[cited answer]
+```
 
-The score blender (`vec_score + alpha * graph_proximity`) is tuned per-deployment on a labelled question set.
+1. **Chunk** the document on its heading tree, keeping a breadcrumb path.
+2. **Embed** each chunk and insert it.
+3. **Extract** entities and triples from the same chunk with an LLM in strict-JSON mode, validated by Pydantic.
+4. **Resolve** each entity through an alias index and upsert it; link chunk to entity.
+5. **Edge** every triple whose subject and object both resolved, carrying an evidence quote.
+6. **Seed** the query's entities by surface match, with an LLM fallback.
+7. **Traverse** to `hops` depth, assigning each visited entity `1 / (1 + hop_distance)`.
+8. **Blend** `vec_score + alpha * graph_proximity`, take top-k, and send those chunks to the model.
 
-## Why SQLite + a single embedding column
+## The modules
 
-Same reason as the rest of this stack: one file, zero infra. The vector column is stored as a JSON-encoded blob; cosine similarity is computed in Python. For workloads beyond a few hundred thousand chunks, swap in pgvector — the `GraphStore` interface is intentionally small.
+| Module | Role |
+|---|---|
+| `chunker.py` | Heading-level split with breadcrumb sections; oversized paragraphs split on character budget |
+| `extractor.py` | LLM → strict JSON → Pydantic `Extraction{entities, triples}`; 8 entity types |
+| `resolver.py` | Surface normalisation (lower, depunctuate, sort tokens) plus an alias index |
+| `store.py` | SQLite `chunks` / `entities` / `edges` / `chunk_entities`; embeddings as JSON text |
+| `retriever.py` | Seed → BFS proximity → cosine scan → blended top-k |
+| `embeddings.py` | `Embedder` protocol; `OpenAIEmbedder` (1536-d) and a deterministic `HashEmbedder` for tests |
+| `core.py` | `GraphRAG.ingest` / `.ask`, context formatting, provider dispatch |
 
-## Entity resolution
+## Design decisions
 
-Most RAG-graph implementations duplicate "OpenAI" and "Open AI" as separate entities. We avoid this with a two-stage process:
+| Decision | Why |
+|---|---|
+| **Hybrid, not pure graph** | A graph only knows what got extracted as a triple. Vectors catch the fuzzy, narrative knowledge that never reduces to (entity, predicate, entity) — and most real corpora are mostly that. |
+| **Triples carry an evidence quote** | An edge you cannot trace back to a sentence is an assertion, not a fact. The quote is what makes the graph auditable when the extractor gets creative. |
+| **Pydantic-validated extraction** | JSON mode still returns malformed output. Validating at the boundary means a bad extraction is a caught error rather than a corrupt node. |
+| **SQLite with embeddings as text** | One file, zero infra, readable with any sqlite client while you are debugging why a traversal went wrong. The `GraphStore` surface is small enough that a pgvector swap is contained. |
+| **Alias merging over exact strings** | Most naive graph-RAG implementations end up with "OpenAI" and "Open AI" as separate nodes, which silently halves every traversal. |
 
-1. **Surface form normalisation** — lowercase, strip punctuation, sort tokens.
-2. **Alias index** — when ingesting a new entity, check the normalised form against existing entities. If a match, merge as alias instead of creating a new node.
+## Limitations
 
-Production deployments should add LLM-based disambiguation for hard cases (e.g. two unrelated "Apple"s). The hook is there.
+Read this section before using the library. Several of these are load-bearing.
 
-## Repo structure
+- **The entity resolver is in-memory only and is never rehydrated from SQLite.** It starts at id 1 on every process. Ingesting into an *existing* `kg.db` therefore reissues ids that already belong to other entities, and `upsert_entity` overwrites them — while their old edges still point at the hijacked ids. **Incremental ingest across process restarts corrupts the graph silently.** Build the graph in one process, or rebuild from scratch.
+- **Consequently the graph half of retrieval is dead in a fresh process.** The retriever's surface index is built from the resolver's in-memory state, so opening an existing DB without re-ingesting yields no seed entities, no traversal, and `graph_proximity = 0` everywhere. The system degrades to plain vector search with no warning.
+- **The retrieved sub-graph is never sent to the model.** The context block contains only chunk text. The graph reweights *which chunks* are selected; the model never sees a triple, a predicate, or an evidence quote.
+- **Cross-chunk relations are impossible by construction.** A triple is dropped unless both its subject and object appear in the same chunk's entity list — which is exactly the multi-document connection case the library exists for. Widening this is the highest-value change available.
+- **Every query is O(N·D) in pure Python.** Retrieval JSON-decodes every stored embedding and runs a hand-rolled cosine in interpreter loops. At 1536 dimensions this is fine for a demo and unusable past a few thousand chunks. No numpy, no ANN, no caching — and a fresh retriever is constructed on every `ask()`.
+- **BFS is unbounded.** No visited-node cap, no degree cap, no time budget, and one chunk lookup per visited entity. A hub entity fans out to the whole graph.
+- **The score blend is unnormalised.** `vec + alpha * graph` adds a cosine in [-1, 1] to a proximity in (0, 1]. `alpha` is a `HybridRetriever` default that `GraphRAG.ask()` does not expose, so tuning it means bypassing `GraphRAG`.
+- **Token-sorting normalisation causes false merges.** "AI Bias" and "Bias AI" collapse to one node.
+- **Extraction failures are swallowed.** A bare `except Exception` around the extractor makes an API outage indistinguishable from a chunk that genuinely had no entities.
+- **No citation verification.** The answer is the raw model string; nothing checks the `[cN]` markers exist or are in range.
+- **No benchmark.** There is no eval, no results file, and this README makes no performance claims — because there is nothing here to back one up.
+
+## Project layout
 
 ```
-.
+rag-graph/
 ├── rag_graph/
-│   ├── __init__.py
-│   ├── core.py            # GraphRAG main class
-│   ├── extractor.py       # LLM entity + relation extraction (Pydantic-validated)
-│   ├── resolver.py        # entity disambiguation + alias merging
-│   ├── store.py           # SQLite store: chunks, entities, edges, joins
-│   ├── retriever.py       # hybrid vector + graph retrieval
-│   ├── embeddings.py      # pluggable embedder (OpenAI default)
-│   └── chunker.py         # heading-aware splitter
-├── examples/
-│   └── demo.py
-├── tests/
-│   ├── test_resolver.py
-│   ├── test_chunker.py
-│   └── test_retriever.py
-└── pyproject.toml
+│   ├── core.py          # GraphRAG: ingest · ask
+│   ├── chunker.py       # heading-aware splitter
+│   ├── extractor.py     # LLM entity + relation extraction (Pydantic-validated)
+│   ├── resolver.py      # surface normalisation + alias merging
+│   ├── store.py         # SQLite chunks · entities · edges · joins
+│   ├── retriever.py     # hybrid vector kNN + graph BFS
+│   └── embeddings.py    # Embedder protocol · OpenAI · deterministic hash
+├── examples/demo.py     # connection-style question end to end
+└── tests/               # 9 tests, offline
 ```
 
-## Status
+## Tests
 
-- [x] Heading-aware chunker
-- [x] LLM entity + relation extractor (Pydantic-validated)
-- [x] Entity resolver with alias merging
-- [x] SQLite graph store
-- [x] Hybrid retriever: vector kNN + graph BFS
-- [x] Score blending: `final = vec + alpha * graph_proximity`
-- [x] Citation-aware answer generation
-- [ ] Multi-hop traversal cost limits (avoid blowing up on dense graphs)
-- [ ] pgvector backend (drop-in replacement for SQLite)
-- [ ] Eval harness for connection-vs-narrative question types
+```bash
+pytest tests/ -q       # 9 tests, no API keys
+```
+
+Honest coverage note: the suite exercises the chunker, the resolver, the store round-trip and embedder determinism. It does **not** exercise `HybridRetriever.retrieve`, the BFS, or the score blend — the three places the limitations above actually live. CI runs it on 3.11 and 3.12.
 
 ## Author
 
-Darrshan Govender · Founder, [Agulhas Code](https://agulhascode.co.za)
+Darrshan Govender · [Agulhas Code](https://agulhascode.co.za) · Durban, South Africa
