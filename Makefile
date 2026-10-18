@@ -1,16 +1,25 @@
-.PHONY: install test lint bench clean
+.PHONY: install test lint demo bench data clean
 
 install:
 	pip install -e ".[dev]"
 
 test:
-	pytest tests/ -q
+	pytest tests/
 
 lint:
 	ruff check .
 
+demo:
+	python examples/demo.py
+
+# Vector-only vs graph retrieval on the bundled synthetic multi-hop questions (about 40 s).
 bench:
-	@echo "No benchmark in this repo."
+	python benchmarks/multihop.py
+
+# Regenerate the synthetic corpus and questions (byte-identical to the committed files).
+data:
+	python data/make_data.py
 
 clean:
-	rm -rf .pytest_cache **/__pycache__ *.egg-info .ruff_cache
+	rm -rf .pytest_cache .ruff_cache *.egg-info
+	find . -name __pycache__ -type d -prune -exec rm -rf {} +

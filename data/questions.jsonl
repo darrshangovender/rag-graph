@@ -1,0 +1,80 @@
+{"answer": "Brinford", "gold_docs": ["company-096"], "hops": 1, "id": "q001", "kind": "hq", "question": "In which city is Hesptek Labs headquartered?"}
+{"answer": "Eskanhaven", "gold_docs": ["company-066"], "hops": 1, "id": "q002", "kind": "hq", "question": "In which city is Fyrin Analytics headquartered?"}
+{"answer": "Telbury", "gold_docs": ["company-073"], "hops": 1, "id": "q003", "kind": "hq", "question": "In which city is Hespcyon Networks headquartered?"}
+{"answer": "Telmouth", "gold_docs": ["company-061"], "hops": 1, "id": "q004", "kind": "hq", "question": "In which city is Belsa Systems headquartered?"}
+{"answer": "Brinhaven", "gold_docs": ["company-118"], "hops": 1, "id": "q005", "kind": "hq", "question": "In which city is Drain Labs headquartered?"}
+{"answer": "Brinhaven", "gold_docs": ["company-088"], "hops": 1, "id": "q006", "kind": "hq", "question": "In which city is Velron Dynamics headquartered?"}
+{"answer": "Calderbury", "gold_docs": ["company-084"], "hops": 1, "id": "q007", "kind": "hq", "question": "In which city is Ilmcyon Systems headquartered?"}
+{"answer": "Telmouth", "gold_docs": ["company-114"], "hops": 1, "id": "q008", "kind": "hq", "question": "In which city is Mavlin Works headquartered?"}
+{"answer": "Brinford", "gold_docs": ["company-110"], "hops": 1, "id": "q009", "kind": "hq", "question": "In which city is Mavlin Labs headquartered?"}
+{"answer": "Dovhaven", "gold_docs": ["company-075"], "hops": 1, "id": "q010", "kind": "hq", "question": "In which city is Orrtrix Works headquartered?"}
+{"answer": "Lyris-8", "gold_docs": ["company-092"], "hops": 1, "id": "q011", "kind": "product", "question": "Which product does Orrlin Analytics make?"}
+{"answer": "Tyrrel-4", "gold_docs": ["company-069"], "hops": 1, "id": "q012", "kind": "product", "question": "Which product does Ilmcyon Analytics make?"}
+{"answer": "Vexia-3", "gold_docs": ["company-068"], "hops": 1, "id": "q013", "kind": "product", "question": "Which product does Kalsa Dynamics make?"}
+{"answer": "Paxis-6", "gold_docs": ["company-119"], "hops": 1, "id": "q014", "kind": "product", "question": "Which product does Jortrix Systems make?"}
+{"answer": "Xanik-7", "gold_docs": ["company-085"], "hops": 1, "id": "q015", "kind": "product", "question": "Which product does Cortrix Dynamics make?"}
+{"answer": "Tyrar-6", "gold_docs": ["company-086"], "hops": 1, "id": "q016", "kind": "product", "question": "Which product does Beltek Labs make?"}
+{"answer": "Zelia-2", "gold_docs": ["company-089"], "hops": 1, "id": "q017", "kind": "product", "question": "Which product does Nexsa Systems make?"}
+{"answer": "Brevex-2", "gold_docs": ["company-077"], "hops": 1, "id": "q018", "kind": "product", "question": "Which product does Haldex Systems make?"}
+{"answer": "Wynia-3", "gold_docs": ["company-112"], "hops": 1, "id": "q019", "kind": "product", "question": "Which product does Fyrlin Systems make?"}
+{"answer": "Zentra-5", "gold_docs": ["company-062"], "hops": 1, "id": "q020", "kind": "product", "question": "Which product does Ilmmir Labs make?"}
+{"answer": "Mormouth", "gold_docs": ["company-078", "person-018"], "hops": 2, "id": "q021", "kind": "founder>hq", "question": "In which city is the company founded by Lena Verstow headquartered?"}
+{"answer": "Calderbury", "gold_docs": ["company-089", "person-029"], "hops": 2, "id": "q022", "kind": "founder>hq", "question": "In which city is the company founded by Farah Telcott headquartered?"}
+{"answer": "Dovhaven", "gold_docs": ["company-065", "person-005"], "hops": 2, "id": "q023", "kind": "founder>hq", "question": "In which city is the company founded by Nils Branrin headquartered?"}
+{"answer": "Gorhaven", "gold_docs": ["company-069", "person-009"], "hops": 2, "id": "q024", "kind": "founder>hq", "question": "In which city is the company founded by Sven Ashley headquartered?"}
+{"answer": "Falstead", "gold_docs": ["company-107", "person-047"], "hops": 2, "id": "q025", "kind": "founder>hq", "question": "In which city is the company founded by Jun Fenrin headquartered?"}
+{"answer": "Calderbury", "gold_docs": ["company-087", "person-027"], "hops": 2, "id": "q026", "kind": "founder>hq", "question": "In which city is the company founded by Pia Wexwick headquartered?"}
+{"answer": "Dovhaven", "gold_docs": ["company-064", "person-004"], "hops": 2, "id": "q027", "kind": "founder>hq", "question": "In which city is the company founded by Lena Morcott headquartered?"}
+{"answer": "Brinford", "gold_docs": ["company-110", "person-050"], "hops": 2, "id": "q028", "kind": "founder>hq", "question": "In which city is the company founded by Lena Dundane headquartered?"}
+{"answer": "Telmouth", "gold_docs": ["company-114", "person-054"], "hops": 2, "id": "q029", "kind": "founder>hq", "question": "In which city is the company founded by Kofi Branrin headquartered?"}
+{"answer": "Telmouth", "gold_docs": ["company-061", "person-001"], "hops": 2, "id": "q030", "kind": "founder>hq", "question": "In which city is the company founded by Elio Fenshaw headquartered?"}
+{"answer": "Paxlo-5", "gold_docs": ["company-067", "person-007"], "hops": 2, "id": "q031", "kind": "founder>product", "question": "Which product is made by the company founded by Bruno Wexrin?"}
+{"answer": "Rixlo-5", "gold_docs": ["company-060", "person-000"], "hops": 2, "id": "q032", "kind": "founder>product", "question": "Which product is made by the company founded by Rhea Mormont?"}
+{"answer": "Lyrrel-7", "gold_docs": ["company-116", "person-056"], "hops": 2, "id": "q033", "kind": "founder>product", "question": "Which product is made by the company founded by Mira Kalstow?"}
+{"answer": "Talon-6", "gold_docs": ["company-091", "person-031"], "hops": 2, "id": "q034", "kind": "founder>product", "question": "Which product is made by the company founded by Lena Branwick?"}
+{"answer": "Wynon-5", "gold_docs": ["company-088", "person-028"], "hops": 2, "id": "q035", "kind": "founder>product", "question": "Which product is made by the company founded by Gael Vergar?"}
+{"answer": "Wynrel-2", "gold_docs": ["company-113", "person-053"], "hops": 2, "id": "q036", "kind": "founder>product", "question": "Which product is made by the company founded by Bruno Morstow?"}
+{"answer": "Brevos-4", "gold_docs": ["company-102", "person-042"], "hops": 2, "id": "q037", "kind": "founder>product", "question": "Which product is made by the company founded by Omar Branholt?"}
+{"answer": "Auria-9", "gold_docs": ["company-106", "person-046"], "hops": 2, "id": "q038", "kind": "founder>product", "question": "Which product is made by the company founded by Nils Dunrin?"}
+{"answer": "Lyria-6", "gold_docs": ["company-101", "person-041"], "hops": 2, "id": "q039", "kind": "founder>product", "question": "Which product is made by the company founded by Alma Fengar?"}
+{"answer": "Ulmar-3", "gold_docs": ["company-071", "person-011"], "hops": 2, "id": "q040", "kind": "founder>product", "question": "Which product is made by the company founded by Sven Teldane?"}
+{"answer": "Brinhaven", "gold_docs": ["company-094", "deal-123"], "hops": 2, "id": "q041", "kind": "acquirer>hq", "question": "In which city is the company that acquired Kalron Dynamics headquartered?"}
+{"answer": "Dovbury", "gold_docs": ["company-098", "deal-132"], "hops": 2, "id": "q042", "kind": "acquirer>hq", "question": "In which city is the company that acquired Mavlin Labs headquartered?"}
+{"answer": "Telmouth", "gold_docs": ["company-074", "deal-122"], "hops": 2, "id": "q043", "kind": "acquirer>hq", "question": "In which city is the company that acquired Ilmlin Systems headquartered?"}
+{"answer": "Falstead", "gold_docs": ["company-107", "deal-125"], "hops": 2, "id": "q044", "kind": "acquirer>hq", "question": "In which city is the company that acquired Elntek Robotics headquartered?"}
+{"answer": "Telmouth", "gold_docs": ["company-114", "deal-129"], "hops": 2, "id": "q045", "kind": "acquirer>hq", "question": "In which city is the company that acquired Lumden Analytics headquartered?"}
+{"answer": "Mormouth", "gold_docs": ["company-078", "deal-135"], "hops": 2, "id": "q046", "kind": "acquirer>hq", "question": "In which city is the company that acquired Orrvos Systems headquartered?"}
+{"answer": "Dovhaven", "gold_docs": ["company-067", "deal-138"], "hops": 2, "id": "q047", "kind": "acquirer>hq", "question": "In which city is the company that acquired Mavdex Labs headquartered?"}
+{"answer": "Eskanhaven", "gold_docs": ["company-102", "deal-133"], "hops": 2, "id": "q048", "kind": "acquirer>hq", "question": "In which city is the company that acquired Nexsa Systems headquartered?"}
+{"answer": "Brinbury", "gold_docs": ["company-071", "deal-124"], "hops": 2, "id": "q049", "kind": "acquirer>hq", "question": "In which city is the company that acquired Elnlin Labs headquartered?"}
+{"answer": "Telmouth", "gold_docs": ["company-061", "deal-121"], "hops": 2, "id": "q050", "kind": "acquirer>hq", "question": "In which city is the company that acquired Dramar Robotics headquartered?"}
+{"answer": "Rhea Wexgar", "gold_docs": ["deal-130", "person-023"], "hops": 2, "id": "q051", "kind": "acquirer>founder", "question": "Who founded the company that acquired Hespcyon Networks?"}
+{"answer": "Hana Kalgar", "gold_docs": ["deal-123", "person-034"], "hops": 2, "id": "q052", "kind": "acquirer>founder", "question": "Who founded the company that acquired Kalron Dynamics?"}
+{"answer": "Tavi Telmere", "gold_docs": ["deal-137", "person-037"], "hops": 2, "id": "q053", "kind": "acquirer>founder", "question": "Who founded the company that acquired Ilmcyon Analytics?"}
+{"answer": "Jun Fenrin", "gold_docs": ["deal-125", "person-047"], "hops": 2, "id": "q054", "kind": "acquirer>founder", "question": "Who founded the company that acquired Elntek Robotics?"}
+{"answer": "Nils Branrin", "gold_docs": ["deal-134", "person-005"], "hops": 2, "id": "q055", "kind": "acquirer>founder", "question": "Who founded the company that acquired Drain Labs?"}
+{"answer": "Quin Solmont", "gold_docs": ["deal-136", "person-002"], "hops": 2, "id": "q056", "kind": "acquirer>founder", "question": "Who founded the company that acquired Tirtek Works?"}
+{"answer": "Rhea Verwick", "gold_docs": ["deal-128", "person-021"], "hops": 2, "id": "q057", "kind": "acquirer>founder", "question": "Who founded the company that acquired Grimir Dynamics?"}
+{"answer": "Gael Solcott", "gold_docs": ["deal-120", "person-035"], "hops": 2, "id": "q058", "kind": "acquirer>founder", "question": "Who founded the company that acquired Fyrden Robotics?"}
+{"answer": "Elio Fenshaw", "gold_docs": ["deal-121", "person-001"], "hops": 2, "id": "q059", "kind": "acquirer>founder", "question": "Who founded the company that acquired Dramar Robotics?"}
+{"answer": "Bruno Wexrin", "gold_docs": ["deal-138", "person-007"], "hops": 2, "id": "q060", "kind": "acquirer>founder", "question": "Who founded the company that acquired Mavdex Labs?"}
+{"answer": "Lyria-6", "gold_docs": ["company-101", "deal-126", "person-012"], "hops": 3, "id": "q061", "kind": "founder>acquirer>product", "question": "Which product is made by the company that acquired the company founded by Kofi Teldane?"}
+{"answer": "Auria-5", "gold_docs": ["company-083", "deal-130", "person-013"], "hops": 3, "id": "q062", "kind": "founder>acquirer>product", "question": "Which product is made by the company that acquired the company founded by Mira Kalwick?"}
+{"answer": "Paxlo-5", "gold_docs": ["company-067", "deal-138", "person-043"], "hops": 3, "id": "q063", "kind": "founder>acquirer>product", "question": "Which product is made by the company that acquired the company founded by Hana Brandane?"}
+{"answer": "Lyrik-5", "gold_docs": ["company-114", "deal-129", "person-051"], "hops": 3, "id": "q064", "kind": "founder>acquirer>product", "question": "Which product is made by the company that acquired the company founded by Hana Fenshaw?"}
+{"answer": "Zentra-5", "gold_docs": ["company-062", "deal-136", "person-019"], "hops": 3, "id": "q065", "kind": "founder>acquirer>product", "question": "Which product is made by the company that acquired the company founded by Elio Vervane?"}
+{"answer": "Xanar-3", "gold_docs": ["company-095", "deal-120", "person-055"], "hops": 3, "id": "q066", "kind": "founder>acquirer>product", "question": "Which product is made by the company that acquired the company founded by Hana Wexley?"}
+{"answer": "Wynrel-2", "gold_docs": ["company-113", "deal-131", "person-059"], "hops": 3, "id": "q067", "kind": "founder>acquirer>product", "question": "Which product is made by the company that acquired the company founded by Elio Morley?"}
+{"answer": "Keson-4", "gold_docs": ["company-074", "deal-122", "person-039"], "hops": 3, "id": "q068", "kind": "founder>acquirer>product", "question": "Which product is made by the company that acquired the company founded by Sven Lorrin?"}
+{"answer": "Lyria-5", "gold_docs": ["company-070", "deal-127", "person-004"], "hops": 3, "id": "q069", "kind": "founder>acquirer>product", "question": "Which product is made by the company that acquired the company founded by Lena Morcott?"}
+{"answer": "Ulmar-3", "gold_docs": ["company-071", "deal-124", "person-031"], "hops": 3, "id": "q070", "kind": "founder>acquirer>product", "question": "Which product is made by the company that acquired the company founded by Lena Branwick?"}
+{"answer": "Veldor", "gold_docs": ["city-150", "company-060", "person-000"], "hops": 3, "id": "q071", "kind": "founder>hq>country", "question": "In which country is the city where the company founded by Rhea Mormont is headquartered?"}
+{"answer": "Veldor", "gold_docs": ["city-140", "company-076", "person-016"], "hops": 3, "id": "q072", "kind": "founder>hq>country", "question": "In which country is the city where the company founded by Mira Kalmere is headquartered?"}
+{"answer": "Bremar", "gold_docs": ["city-143", "company-085", "person-025"], "hops": 3, "id": "q073", "kind": "founder>hq>country", "question": "In which country is the city where the company founded by Lena Verholt is headquartered?"}
+{"answer": "Veldor", "gold_docs": ["city-140", "company-081", "person-021"], "hops": 3, "id": "q074", "kind": "founder>hq>country", "question": "In which country is the city where the company founded by Rhea Verwick is headquartered?"}
+{"answer": "Veldor", "gold_docs": ["city-145", "company-102", "person-042"], "hops": 3, "id": "q075", "kind": "founder>hq>country", "question": "In which country is the city where the company founded by Omar Branholt is headquartered?"}
+{"answer": "Tessaly", "gold_docs": ["city-142", "company-075", "person-015"], "hops": 3, "id": "q076", "kind": "founder>hq>country", "question": "In which country is the city where the company founded by Mira Kalley is headquartered?"}
+{"answer": "Ostrel", "gold_docs": ["city-149", "company-072", "person-012"], "hops": 3, "id": "q077", "kind": "founder>hq>country", "question": "In which country is the city where the company founded by Kofi Teldane is headquartered?"}
+{"answer": "Bremar", "gold_docs": ["city-143", "company-118", "person-058"], "hops": 3, "id": "q078", "kind": "founder>hq>country", "question": "In which country is the city where the company founded by Quin Verwick is headquartered?"}
+{"answer": "Veldor", "gold_docs": ["city-140", "company-090", "person-030"], "hops": 3, "id": "q079", "kind": "founder>hq>country", "question": "In which country is the city where the company founded by Kofi Wexvane is headquartered?"}
+{"answer": "Morvane", "gold_docs": ["city-146", "company-061", "person-001"], "hops": 3, "id": "q080", "kind": "founder>hq>country", "question": "In which country is the city where the company founded by Elio Fenshaw is headquartered?"}

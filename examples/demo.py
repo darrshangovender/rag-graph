@@ -1,50 +1,67 @@
-"""Demo: ingest a small corpus, ask a connection-style question.
+"""Offline demo: ingest a small synthetic corpus, ask a connection-style question.
 
-Requires either ANTHROPIC_API_KEY or OPENAI_API_KEY.
+    python examples/demo.py
+
+No API key and no network: a lexical hashing embedder, the rule-based extractor and the extractive
+answerer (it quotes the best-matching sentences and prints the graph path; it does not generate).
+The documents below are INVENTED (names and facts are made up). To use real models pass
+`embedder=OpenAIEmbedder()`, `extractor_model="claude-sonnet-4-5"` and
+`answer_model="claude-sonnet-4-5"`.
 """
 
+from __future__ import annotations
+
+import argparse
+import tempfile
+from pathlib import Path
+
 from rag_graph import GraphRAG
-from rag_graph.embeddings import OpenAIEmbedder
 
 DOCS = {
     "doc-1": """\
-# DeepMind acquisition
-Google acquired DeepMind, a London-based AI research lab, in 2014. The deal was reported at about $500m.
-DeepMind was founded by Demis Hassabis, Shane Legg, and Mustafa Suleyman in 2010.
+# Brindle Labs
+Brindle Labs is a mapping company headquartered in Halmouth. Brindle Labs makes Kestrel-4.
 """,
     "doc-2": """\
-# Demis Hassabis
-Demis Hassabis is a neuroscientist who co-founded DeepMind. He has led DeepMind since the acquisition and is now CEO of Google DeepMind.
+# Tamsin Velcott
+Tamsin Velcott is an engineer. Tamsin Velcott founded Brindle Labs in 2011.
 """,
     "doc-3": """\
-# Mustafa Suleyman after DeepMind
-After leaving DeepMind, Mustafa Suleyman co-founded Inflection AI in 2022. In 2024, he joined Microsoft as CEO of Microsoft AI.
+# Deal note
+Orvane Systems acquired Brindle Labs in 2019.
+""",
+    "doc-4": """\
+# Industry note
+Which city a company is headquartered in matters to its staff, and a company that moves city
+loses people.
 """,
 }
 
+QUESTION = "In which city is the company founded by Tamsin Velcott headquartered?"
 
-def main() -> None:
-    rag = GraphRAG(
-        db_path="demo_kg.db",
-        embedder=OpenAIEmbedder(),
-        extractor_model="claude-sonnet-4-5",
-        answer_model="claude-sonnet-4-5",
-    )
-    for doc_id, text in DOCS.items():
-        n = rag.ingest(doc_id=doc_id, text=text)
-        print(f"ingested {doc_id}: {n} chunks")
 
-    question = "Which person co-founded a company that was acquired by Google, and what did they do after?"
-    result = rag.ask(question, k=6, hops=2)
-    print("\nANSWER\n======")
-    print(result.answer)
-    print("\nENTITIES USED IN GRAPH TRAVERSAL\n================================")
-    for e in result.entities_used:
-        print(f"  - {e}")
-    print("\nSOURCES\n=======")
-    for s in result.sources:
-        print(f"  [c{s['chunk_id']}] {s['doc_id']} (vec={s['vec_score']:.2f}, graph={s['graph_proximity']:.2f}, final={s['final_score']:.2f})")
+def main() -> int:
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--db", type=Path, default=None)
+    args = ap.parse_args()
+    db = args.db or Path(tempfile.mkdtemp()) / "demo_kg.db"
+    with GraphRAG(db_path=str(db)) as rag:
+        for doc_id, text in DOCS.items():
+            rep = rag.ingest(doc_id=doc_id, text=text)
+            print(f"ingested {doc_id}: {rep.chunks} chunk(s), {rep.triples} relation(s)")
+        print(f"\nQ: {QUESTION}")
+        for label, alpha in (("vector only", 0.0), ("vector + graph", None)):
+            r = rag.ask(QUESTION, k=2, hops=2, alpha=alpha)
+            print(f"\n--- {label} (top 2 chunks) ---")
+            print(r.answer)
+            print("retrieved:", ", ".join(f"{s['doc_id']}" for s in r.sources))
+            if r.graph_facts:
+                print("graph facts:")
+                for f in r.graph_facts:
+                    print(f"  {f['subject']} --{f['predicate']}--> {f['object']} "
+                          f"(from chunk {f['source_chunk']}, hop {f['hop']})")
+    return 0
 
 
 if __name__ == "__main__":
-    main()
+    raise SystemExit(main())
